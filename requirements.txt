@@ -1,6 +1,4 @@
-crewai==1.14.4
-openai==2.24.0
-pillow==10.4.0
-pymupdf==1.27.2.3
-python-dotenv==1.2.2
-litellm==1.83.14
+crewai>=1.14.4
+pymupdf>=1.27.2.3
+python-dotenv>=1.0.0
+litellm>=1.84.0
