@@ -16,9 +16,11 @@ license: mit
 
 Upload any document (PDF, image, TXT). Four specialized AI agents powered by **AMD Instinct MI300X GPUs** via Fireworks AI (AMD-powered inference) analyze it and deliver a structured intelligence report in under 60 seconds.
 
-## Live Demo
+## Running it
 
-🚀 **[Try it on Hugging Face Spaces](https://huggingface.co/spaces/YOUR_HF_ORG/documind-ai)**
+There is no hosted demo. It runs locally in about two minutes — see
+[Local Setup](#local-setup). The repo also ships with Hugging Face Spaces
+front-matter (`sdk: streamlit`, `app_file: app.py`), so it deploys to a Space as-is.
 
 ## How It Works
 
@@ -79,7 +81,7 @@ Document Upload (PDF / JPG / PNG / TXT)
 ## Local Setup
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/documind-ai.git
+git clone https://github.com/my5757980/documind-ai.git
 cd documind-ai
 uv sync
 cp .env.example .env
@@ -157,4 +159,3 @@ MIT — See [LICENSE](LICENSE)
 
 *Built with ❤️ on AMD MI300X GPUs • Fireworks AI • DeepSeek V3.1 • Kimi K2.5 • CrewAI • Streamlit*
 *AMD Developer Hackathon 2026 — Solo submission by Muhammad Yaseen*
-"# documind-ai" 
