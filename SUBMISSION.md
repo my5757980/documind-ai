@@ -1,3 +1,5 @@
+> **Correction (2026-09-24).** This is the text as submitted. Its statements that inference ran on AMD Instinct MI300X GPUs are not backed by the code: every model call goes to Fireworks AI's public serverless API, and the code uses no AMD Developer Cloud instance. See the README.
+
 # DocuMind AI — Lablab.ai Submission Content
 
 ## Project Title

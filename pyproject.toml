@@ -12,3 +12,6 @@ dependencies = [
     "python-dotenv>=1.2.2",
     "streamlit>=1.57.0",
 ]
+
+[dependency-groups]
+dev = ["pytest>=8"]

@@ -14,7 +14,12 @@ license: mit
 
 **AMD Developer Hackathon 2026** | Track 1: AI Agents & Agentic Workflows | Track 3: Vision & Multimodal AI
 
-Upload any document (PDF, image, TXT). Four specialized AI agents powered by **AMD Instinct MI300X GPUs** via Fireworks AI (AMD-powered inference) analyze it and deliver a structured intelligence report in under 60 seconds.
+Upload any document (PDF, image, TXT). Four specialized CrewAI agents analyze it through **Fireworks AI's** OpenAI-compatible inference API and deliver a structured intelligence report in under 60 seconds.
+
+> **About the hardware.** Every model call goes to Fireworks' public serverless API
+> (`api.fireworks.ai`). The code runs no GPUs of its own and uses none of the AMD Developer Cloud
+> MI300X instances the hackathon offered, so it cannot show which hardware served a request. Earlier
+> versions of this README said all inference ran on AMD Instinct MI300X; nothing here proves that.
 
 ## Running it
 
@@ -28,25 +33,25 @@ front-matter (`sdk: streamlit`, `app_file: app.py`), so it deploys to a Space as
 Document Upload (PDF / JPG / PNG / TXT)
             │
     ┌───────▼────────┐
-    │  🔍 Vision Agent │  ← Kimi K2.5 on AMD MI300X (Fireworks AI)
+    │  🔍 Vision Agent │  ← Kimi K2.5 (Fireworks AI)
     │  Analyzes images,│    Charts, diagrams, figures
     │  charts, figures │
     └───────┬────────┘
             │
     ┌───────▼────────┐
-    │  📖 Reader Agent │  ← DeepSeek V3.1 on AMD MI300X (Fireworks AI)
+    │  📖 Reader Agent │  ← DeepSeek V3.1 (Fireworks AI)
     │  Extracts text, │    Entities, facts, document type
     │  entities, facts │
     └───────┬────────┘
             │
     ┌───────▼────────┐
-    │  🧠 Analyst Agent│  ← DeepSeek V3.1 on AMD MI300X (Fireworks AI)
+    │  🧠 Analyst Agent│  ← DeepSeek V3.1 (Fireworks AI)
     │  Cross-modal    │    Synthesizes vision + text findings
     │  intelligence   │
     └───────┬────────┘
             │
     ┌───────▼────────┐
-    │  📋 Reporter    │  ← DeepSeek V3.1 on AMD MI300X (Fireworks AI)
+    │  📋 Reporter    │  ← DeepSeek V3.1 (Fireworks AI)
     │  Agent          │    Structured final report
     └───────┬────────┘
             │
@@ -58,8 +63,7 @@ Document Upload (PDF / JPG / PNG / TXT)
 
 | Component | Technology |
 |-----------|-----------|
-| GPU | AMD Instinct MI300X via Fireworks AI (AMD-powered) |
-| Inference Provider | Fireworks AI — OpenAI-compatible API on AMD hardware |
+| Inference Provider | Fireworks AI — serverless, OpenAI-compatible API (no GPUs of our own) |
 | Vision Model | Kimi K2.5 (`accounts/fireworks/models/kimi-k2p5`) |
 | Text Model | DeepSeek V3.1 (`accounts/fireworks/models/deepseek-v3p1`) |
 | Agent Framework | CrewAI (sequential pipeline) |
@@ -71,7 +75,7 @@ Document Upload (PDF / JPG / PNG / TXT)
 
 - **4-Agent CrewAI Pipeline** — specialized agents work sequentially, each building on the last
 - **Multimodal Understanding** — processes both text AND embedded images/charts in same document
-- **AMD MI300X Powered** — all inference runs on AMD Instinct MI300X via Fireworks AI
+- **One OpenAI-compatible provider** — every model call goes to Fireworks AI through CrewAI's `LLM` class
 - **Kimi K2.5** — state-of-the-art vision-language model for image/chart analysis
 - **DeepSeek V3.1** — open-source frontier model for text reasoning and report writing
 - **Live Agent Progress** — real-time display of which agent is running
@@ -87,9 +91,12 @@ uv sync
 cp .env.example .env
 # Edit .env — add your Fireworks AI API key from app.fireworks.ai/settings/users/api-keys
 uv run streamlit run app.py
+uv run pytest            # 7 tests, no network, no API key
 ```
 
 ## Environment Variables
+
+The variables are named `AMD_*` after the hackathon; they hold a Fireworks AI key and endpoint.
 
 ```env
 AMD_API_KEY=your_fireworks_api_key_here
@@ -109,23 +116,22 @@ Get your free API key at [fireworks.ai](https://fireworks.ai) — $6 free credit
 | PNG | ❌ | ✅ Full image |
 | TXT | ✅ UTF-8 | ❌ |
 
-## Build in Public — AMD Developer Experience Feedback
+## Build in Public — Developer Experience Feedback
 
-Building DocuMind AI on AMD-powered infrastructure revealed several key insights:
+Building DocuMind AI for the AMD Developer Hackathon revealed several key insights:
 
 **What worked great:**
-- Fireworks AI provides an **OpenAI-compatible API on AMD MI300X GPUs** — zero SDK changes needed, just swap `base_url` and `api_key`
+- Fireworks AI provides an **OpenAI-compatible API** — zero SDK changes needed, just swap `base_url` and `api_key`
 - **Kimi K2.5** multimodal model handles base64 image encoding identically to OpenAI Vision API
 - **CrewAI's LLM class** integrates cleanly with custom endpoints — `LLM(model="openai/accounts/fireworks/models/deepseek-v3p1", base_url=AMD_BASE_URL)` just works
-- **DeepSeek V3.1** on AMD hardware delivers frontier-level reasoning for document analysis
+- **DeepSeek V3.1** delivers frontier-level reasoning for document analysis
 
 **Developer experience notes:**
 - The OpenAI-compatible interface dramatically lowers barrier to entry — existing Python AI code migrates in minutes
-- AMD MI300X's large memory bandwidth is ideal for multimodal workloads processing both vision and text simultaneously
 - Serverless inference via Fireworks AI means no GPU provisioning or infrastructure management
 
 **Improvement suggestions:**
-- A curated list of confirmed serverless model IDs available on AMD-powered infrastructure would help developers choose faster
+- A curated list of serverless model IDs, and which hardware serves each, would help developers choose faster
 - Example notebooks showing CrewAI + AMD inference integration would accelerate adoption
 
 ## Project Structure
@@ -133,7 +139,7 @@ Building DocuMind AI on AMD-powered infrastructure revealed several key insights
 ```
 documind-ai/
 ├── app.py                    # Streamlit UI
-├── config.py                 # LLM factory (Fireworks AI / AMD-powered)
+├── config.py                 # LLM factory (Fireworks AI)
 ├── agents/
 │   ├── vision_agent.py       # Kimi K2.5 vision analysis
 │   ├── reader_agent.py       # DeepSeek V3.1 text extraction
@@ -157,5 +163,5 @@ MIT — See [LICENSE](LICENSE)
 
 ---
 
-*Built with ❤️ on AMD MI300X GPUs • Fireworks AI • DeepSeek V3.1 • Kimi K2.5 • CrewAI • Streamlit*
+*Built with ❤️ on Fireworks AI • DeepSeek V3.1 • Kimi K2.5 • CrewAI • Streamlit*
 *AMD Developer Hackathon 2026 — Solo submission by Muhammad Yaseen*
